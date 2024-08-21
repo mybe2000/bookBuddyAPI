@@ -1,18 +1,30 @@
-/*TODO
-
-1. Create a function createBook({ title,
-  author,
-  description,
-  coverImage,
-  available,})
-  to insert into the 'books' table in our db - this is JUST LIKE the createUser function
-
-  
-2. export the function from this file
-
-
-  */
 const client = require("./client");
+
+const getBooks = async () => {
+  try {
+    const SQL = `SELECT * FROM books`;
+    const { rows } = await client.query(SQL);
+    console.log(rows);
+    if (!rows) {
+      return { message: "something went wrong" };
+    }
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getBook = async (id) => {
+  try {
+    const SQL = `SELECT * FROM books WHERE id=$1`;
+    const {
+      rows: [book],
+    } = await client.query(SQL, [id]);
+    return book;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const createBook = async ({
   title,
@@ -39,4 +51,4 @@ const createBook = async ({
   }
 };
 
-module.exports = { createBook };
+module.exports = { createBook, getBooks, getBook };

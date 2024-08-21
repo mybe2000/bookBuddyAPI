@@ -1,8 +1,28 @@
 const express = require("express");
 const userRouter = express.Router();
+const { getUsers, getUserById } = require("../db/users");
+
+userRouter.get("/", async (req, res) => {
+  try {
+    const results = await getUsers();
+    res.send(results);
+  } catch (error) {
+    res.send({ error, message: "something went wrong" });
+  }
+});
 
 userRouter.get("/me", (req, res) => {
-  res.send("here is account");
+  res.send("here is my account");
+});
+
+userRouter.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await getUserById(id);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // POST to ${baseurl}/api/users/register

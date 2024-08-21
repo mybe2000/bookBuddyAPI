@@ -3,7 +3,7 @@ require("dotenv").config();
 const client = require("./client");
 const { createUser, getUserByEmail } = require("./users");
 
-const { createBook } = require("./books");
+const { createBook, getBooks } = require("./books");
 
 const users = [
   {
@@ -133,18 +133,12 @@ const seedDatabase = async () => {
     await insertUsers();
     console.log("users added successfully");
     await getUserByEmail("alice@example.com");
-    // await createBook({
-    //   title: "Alexander and the Terrible, Horrible, No Good, Very Bad Day",
-    //   author: "Judith Viorst",
-    //   description:
-    //     "Alexander and the Terrible, Horrible, No Good, Very Bad Day is a children's picture book by American author Judith Viorst. It was first published in 1972 and tells the story of Alexander, a boy who has a terrible day from start to finish. The book is a humorous look at the everyday frustrations of childhood.",
-    //   coverImage:
-    //     "https://upload.wikimedia.org/wikipedia/en/2/25/ALEXANDER_TERRIBLE_HORRIBLE.jpg",
-    //   available: true,
-    // });
+    // await createBook();
     console.log("inserting books");
     await insertBooks();
     console.log("books added successfully");
+    console.log("GETTING ALL BOOKS");
+    await getBooks();
   } catch (error) {
     console.log(error);
   } finally {
