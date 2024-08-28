@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const client = require("./client");
-const { createUser, getUserByEmail } = require("./users");
+const { createUser } = require("./users");
 
 const { createBook, getBooks } = require("./books");
 
@@ -132,12 +132,12 @@ const seedDatabase = async () => {
     console.log("inserting users");
     await insertUsers();
     console.log("users added successfully");
-    await getUserByEmail("alice@example.com");
+    // await getUserByEmail("alice@example.com");
     // await createBook();
     console.log("inserting books");
     await insertBooks();
-    console.log("books added successfully");
-    console.log("GETTING ALL BOOKS");
+    // console.log("books added successfully");
+    // console.log("GETTING ALL BOOKS");
     await getBooks();
   } catch (error) {
     console.log(error);

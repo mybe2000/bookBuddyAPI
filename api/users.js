@@ -1,6 +1,11 @@
 const express = require("express");
 const userRouter = express.Router();
-const { getUsers, getUserById } = require("../db/users");
+const {
+  getUsers,
+  getUserById,
+  createUser,
+  getUserByEmail,
+} = require("../db/users");
 
 userRouter.get("/", async (req, res) => {
   try {
@@ -26,14 +31,39 @@ userRouter.get("/:id", async (req, res) => {
 });
 
 // POST to ${baseurl}/api/users/register
-userRouter.post("/register", (req, res) => {
-  console.log(req.body);
-  res.send("user registered");
+userRouter.post("/register", async (req, res) => {
+  const { firstname, lastname, email, password } = req.body;
+  if (!email || email === "") {
+    res.send("email not provided");
+    return;
+  }
+  if (!password || password === "") {
+    res.send("password not provided");
+    return;
+  }
+
+  try {
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      res.send("user already exists with that email");
+      return;
+    }
+    const result = await createUser(req.body);
+    console.log(result);
+    res.send("success");
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
 });
 
-userRouter.post("/login", (req, res) => {
-  console.log("request body", req.body);
-  res.send("user logged in");
+userRouter.post("/login", async (req, res) => {
+  try {
+    console.log("request body", req.body);
+    res.send("user logged in");
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = userRouter;

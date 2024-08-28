@@ -1,13 +1,21 @@
 const client = require("./client");
+const bcrypt = require("bcrypt");
+const SALT_COUNT = 10;
 
 const createUser = async ({ firstname, lastname, email, password }) => {
-  console.log("created", firstname);
   try {
+    const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+    console.log(hashedPassword);
     const SQL = `INSERT INTO users(firstname, lastname, email, password) VALUES($1, $2, $3, $4) ON CONFLICT(email) DO NOTHING RETURNING id, firstname, lastname, email`;
 
     const {
       rows: [user],
-    } = await client.query(SQL, [firstname, lastname, email, password]);
+    } = await client.query(SQL, [
+      firstname || "fistname",
+      lastname || "lastname",
+      email,
+      hashedPassword,
+    ]);
     console.log("rows", user);
     return user;
   } catch (error) {
@@ -31,6 +39,20 @@ const getUsers = async () => {
     const SQL = `SELECT * FROM users`;
     const { rows } = await client.query(SQL);
     return rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUser = async ({ email, password }) => {
+  try {
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser) return;
+    const hashedPassword = existingUser.password;
+    const passwordsMatch = await bcrypt.compare(password, hashedPassword);
+    if (!passwordsMatch) return;
+    delete existingUser.password;
+    return existingUser;
   } catch (error) {
     console.log(error);
   }
