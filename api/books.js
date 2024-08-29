@@ -8,13 +8,12 @@ const {
   updateBook,
 } = require("../db/books");
 
-booksRouter.get("/", async (req, res) => {
+booksRouter.get("/", async (req, res, next) => {
   try {
     const results = await getBooks();
-
     res.send(results);
   } catch (error) {
-    res.send({ error, message: "something went wrong" });
+    next(error);
   }
 });
 

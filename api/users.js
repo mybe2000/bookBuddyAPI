@@ -2,10 +2,13 @@ const express = require("express");
 const userRouter = express.Router();
 const {
   getUsers,
+  getUser,
   getUserById,
   createUser,
   getUserByEmail,
 } = require("../db/users");
+
+const jwt = require("jsonwebtoken");
 
 userRouter.get("/", async (req, res) => {
   try {
@@ -49,6 +52,26 @@ userRouter.post("/register", async (req, res) => {
       return;
     }
     const result = await createUser(req.body);
+    if (result) {
+      const token = jwt.sign({ id: result.id, email }, process.env.JWT_SECRET, {
+        expiresIn: "1w",
+      });
+      console.log(token);
+      res.send({
+        message: "Registration successful",
+        token,
+        user: {
+          id: result.id,
+          firstname: result.firstname,
+          lastname: result.lastname,
+          email: result.email,
+        },
+      });
+      return;
+    } else {
+      res.send("error registering");
+      return;
+    }
     console.log(result);
     res.send("success");
   } catch (error) {
@@ -58,11 +81,29 @@ userRouter.post("/register", async (req, res) => {
 });
 
 userRouter.post("/login", async (req, res) => {
+  console.log(req.body.email);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.send("Missing credentials- must supply both email and password");
+    return;
+  }
   try {
-    console.log("request body", req.body);
-    res.send("user logged in");
+    const result = await getUser(req.body);
+    if (result) {
+      const token = jwt.sign({ id: result.id, email }, process.env.JWT_SECRET, {
+        expiresIn: "1w",
+      });
+
+      res.send({
+        message: "logged in successfully",
+        token,
+      });
+    } else {
+      next({ name: "incorrectCredentialsError" });
+      // res.send("wrong credentials");
+    }
   } catch (error) {
-    console.log(error);
+    res.send("something went wrong");
   }
 });
 

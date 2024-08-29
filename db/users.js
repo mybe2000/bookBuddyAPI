@@ -45,6 +45,7 @@ const getUsers = async () => {
 };
 
 const getUser = async ({ email, password }) => {
+  console.log(email);
   try {
     const existingUser = await getUserByEmail(email);
     if (!existingUser) return;
@@ -52,6 +53,7 @@ const getUser = async ({ email, password }) => {
     const passwordsMatch = await bcrypt.compare(password, hashedPassword);
     if (!passwordsMatch) return;
     delete existingUser.password;
+    console.log("existing user", existingUser);
     return existingUser;
   } catch (error) {
     console.log(error);
@@ -70,4 +72,4 @@ const getUserById = async (id) => {
   }
 };
 
-module.exports = { createUser, getUserByEmail, getUsers, getUserById };
+module.exports = { createUser, getUserByEmail, getUsers, getUserById, getUser };
