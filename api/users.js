@@ -34,21 +34,24 @@ userRouter.get("/:id", async (req, res) => {
 });
 
 // POST to ${baseurl}/api/users/register
-userRouter.post("/register", async (req, res) => {
+userRouter.post("/register", async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
   if (!email || email === "") {
-    res.send("email not provided");
+    next({ name: "EmailRequiredError", message: "email not provided" });
     return;
   }
   if (!password || password === "") {
-    res.send("password not provided");
+    next({ name: "PasswordRequiredError", message: "password not provided" });
     return;
   }
 
   try {
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      res.send("user already exists with that email");
+      next({
+        name: "ExistingUserError",
+        message: "user already exists with that email",
+      });
       return;
     }
     const result = await createUser(req.body);
@@ -69,23 +72,21 @@ userRouter.post("/register", async (req, res) => {
       });
       return;
     } else {
-      res.send("error registering");
+      next({ name: "RegistrationError", message: "error registering" });
       return;
     }
-    console.log(result);
-    res.send("success");
   } catch (error) {
-    console.log(error);
-    res.send(error);
+    next(error);
   }
 });
 
-userRouter.post("/login", async (req, res) => {
-  console.log(req.body.email);
+userRouter.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.send("Missing credentials- must supply both email and password");
-    return;
+    next({
+      name: "MissingCredentialsError",
+      message: "please supply both email and password",
+    });
   }
   try {
     const result = await getUser(req.body);
@@ -99,11 +100,13 @@ userRouter.post("/login", async (req, res) => {
         token,
       });
     } else {
-      next({ name: "incorrectCredentialsError" });
-      // res.send("wrong credentials");
+      next({
+        name: "incorrectCredentialsError",
+        message: "username or password incorrect",
+      });
     }
   } catch (error) {
-    res.send("something went wrong");
+    next(error);
   }
 });
 
