@@ -31,7 +31,9 @@ const getUserByEmail = async (email) => {
     } = await client.query(SQL, [email]);
     console.log(result);
     return result;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getUsers = async () => {

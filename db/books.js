@@ -20,6 +20,7 @@ const getBook = async (id) => {
     const {
       rows: [book],
     } = await client.query(SQL, [id]);
+    console.log(book);
     return book;
   } catch (error) {
     console.log(error);
@@ -39,12 +40,13 @@ const deleteBook = async (id) => {
   }
 };
 
-const updateBook = async (id, available) => {
+const updateBook = async (available, id) => {
   try {
     const SQL = `UPDATE books SET available=$1 WHERE id=$2 RETURNING *`;
     const {
       rows: [book],
     } = await client.query(SQL, [available, id]);
+
     return book;
   } catch (error) {
     console.log(error);

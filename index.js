@@ -16,11 +16,20 @@ app.get("/", (req, res) => {
   res.send("hello from server");
 });
 
+app.get('*', (req, res) => {
+  res.status(404).send({
+    error: '404 - Not Found',
+    message: 'No route found for requested URL'
+  })
+});
+
 app.use((error, req, res, next) => {
-  console.log("ERROR", error);
+  console.log("Error", error);
+  if (res.statusCode < 400) res.status(500);
   res.send({
-    message: "SOMETHING WENT WRONG",
-  });
+    name: error.name,
+    message: error.message
+  })
 });
 
 app.listen(PORT, () => {
