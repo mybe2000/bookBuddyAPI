@@ -12,14 +12,14 @@ const {
 const jwt = require("jsonwebtoken");
 const { requireUser } = require("./utils");
 
-// userRouter.get("/", async (req, res) => {
-//   try {
-//     const results = await getUsers();
-//     res.send(results);
-//   } catch (error) {
-//     res.send({ error, message: "something went wrong" });
-//   }
-// });
+userRouter.get("/", async (req, res) => {
+  try {
+    const results = await getUsers();
+    res.send(results);
+  } catch (error) {
+    res.send({ error, message: "something went wrong" });
+  }
+});
 
 userRouter.get("/me", requireUser, async (req, res) => {
   try {

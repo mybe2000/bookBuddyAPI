@@ -8,4 +8,5 @@ const db = new Client({
   password: process.env.DB_PWD,
   database: process.env.DB_NAME,
 });
+
 module.exports = db;

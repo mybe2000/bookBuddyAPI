@@ -27,7 +27,8 @@ const getReservation = async (id) => {
 
 const getUsersReservations = async (userId) => {
   try {
-    const SQL = `SELECT reservations.id, books.title, books.description, books.coverimage, books.author FROM reservations JOIN books ON reservations.bookid = books.id AND userid=$1`;
+    // const SQL = `SELECT reservations.id, books.id, books.title, books.description, books.coverimage, books.author FROM reservations JOIN books ON reservations.booksid = books.id AND userid=$1`;
+    const SQL = `SELECT reservations.id, books.id, books.title, books.description, books.coverimage, books.author FROM reservations JOIN books ON userid=$1 AND reservations.booksid= books.id`;
     const { rows } = await client.query(SQL, [userId]);
     if (!rows) return;
     console.log(rows);
