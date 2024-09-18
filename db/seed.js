@@ -482,9 +482,9 @@ const books = [
 
 const dropTables = async () => {
   try {
-    await client.query("DROP TABLE IF EXISTS users CASCADE");
-    await client.query("DROP TABLE IF EXISTS books CASCADE");
-    await client.query("DROP TABLE IF EXISTS reservations");
+    await client.query(`DROP TABLE IF EXISTS users CASCADE`);
+    await client.query(`DROP TABLE IF EXISTS books CASCADE`);
+    await client.query(`DROP TABLE IF EXISTS reservations`);
   } catch (error) {
     console.log(error);
   }
