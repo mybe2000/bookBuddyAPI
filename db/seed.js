@@ -506,7 +506,7 @@ const createTables = async () => {
         author VARCHAR(127) NOT NULL,
         description VARCHAR(1023),
         coverimage VARCHAR(255) DEFAULT 'https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg',
-        available boolean DEFAULT true
+        available BOOLEAN DEFAULT true
         )`);
 
     await client.query(`CREATE TABLE reservations(
@@ -547,7 +547,6 @@ const seedDatabase = async () => {
     console.log("dropped");
     console.log("CREATING TABLES...");
     await createTables();
-
     console.log("TABLES SUCCESSFULLY CREATED!");
     // await getUsers();
     // console.log("users");
