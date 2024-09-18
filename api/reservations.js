@@ -1,4 +1,7 @@
 const express = require("express");
+const reservationsRouter = express.Router();
+const { requireUser } = require("./utils");
+
 const {
   getReservation,
   getUsersReservations,
@@ -6,8 +9,6 @@ const {
   getBook,
   updateBook,
 } = require("../db");
-const reservationsRouter = express.Router();
-const { requireUser } = require("./utils");
 
 reservationsRouter.get("/", requireUser, async (req, res, next) => {
   try {

@@ -23,7 +23,7 @@ booksRouter.get("/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     console.log(id);
-    if (isNaN(id) || req.params.id === "") {
+    if (isNaN(id) || req.params.id === " ") {
       next({
         name: "InvalidIdFormat",
         message: "provided request parameter is not valid book ID",
@@ -67,7 +67,10 @@ booksRouter.patch("/:id", requireUser, async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     if (isNaN(id) || req.params.id === " ") {
-      next({ name: "InvalidIdFormat", message: "Not a valid book id" });
+      next({
+        name: "InvalidIdFormat",
+        message: "Not a valid book id",
+      });
       return;
     }
     const result = await getBook(id);
@@ -89,7 +92,7 @@ booksRouter.patch("/:id", requireUser, async (req, res, next) => {
       }
     }
   } catch (error) {
-    next({ name: "Error" });
+    next(error);
   }
 });
 

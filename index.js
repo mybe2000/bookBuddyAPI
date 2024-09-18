@@ -1,17 +1,13 @@
 const express = require("express");
 const app = express();
-const PORT = 3000;
-
-const cors = require("cors");
-
+const cors = require(cors());
 require("dotenv").config();
-
 const client = require("./db/client");
 client.connect();
+const PORT = 3000;
+app.use(express.json());
 
 app.use(cors());
-
-app.use(express.json());
 
 // console.log(process.env.JWT_SECRET);
 app.use("/api", require("./api"));
